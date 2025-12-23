@@ -580,7 +580,13 @@ document.addEventListener("DOMContentLoaded", () => {
         exit: () => { 
             if (termWindow) termWindow.style.display = 'none'; 
         },
-        "close the world": () => triggerEasterEgg()
+        close: (arg) => {
+            if (arg === "the world") {
+                triggerEasterEgg();
+            } else {
+                printToTerminal("Usage: close [target]");
+            }
+        }
     };
 
     if (termInput) {
