@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lain Page</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!------------------------------------------------------------------------------------->
+    <div id="boot-screen">
+        <div class="boot-content">
+            <pre class="ascii-logo">
+   _       _       
+  | |     (_)      
+  | | __ _ _ _ __  
+  | |/ _` | | '_ \ 
+  | | (_| | | | | |
+  |_|\__,_|_|_| |_|
+            </pre>
+            <p>COPLAND OS ENTERPRISE v1.02</p>
+            <p>Checking memory... <span style="color:var(--lain-cyan)">OK</span></p>
+            <p>Loading Wired Protocol... <span style="color:var(--lain-cyan)">OK</span></p>
+            <br>
+            <p class="blink-text" style="font-size: 1.2rem;">[ CLICK ANYWHERE TO LOGIN ]</p>
+        </div>
+    </div>
+    <!------------------------------------------------------------------------------------->    
+    <div class="desktop-background"></div>
+    <div class="scanlines"></div>
+    <!------------------------------------------------------------------------------------->
+    <nav class="top-bar">
+        <div class="menu-area">
+            <div class="nav-item" onclick="toggleMenu('status-menu')">Status
+                <div id="status-menu" class="dropdown-content">
+                    <div class="menu-opt">System: Online</div>
+                    <div class="menu-opt">Layer: 07</div>
+                    <div class="menu-opt">Wired: Connected</div>
+                </div>
+            </div>
+            <div class="nav-item" onclick="toggleMenu('pass-menu')">AI lain Pass
+                <div id="pass-menu" class="dropdown-content">
+                    <div class="menu-opt" onclick="openWindow('win-chat')">> Open Chat</div>
+                    <div class="menu-opt" onclick="openDefaultVideo()">> Open Video</div>
+                    <div class="menu-opt" onclick="openWindow('win-terminal')">> Open Terminal</div>
+                    <div class="menu-opt" onclick="openDefaultAudio()">> Open Console</div>
+                </div>
+            </div>
+            <div class="nav-item" onclick="toggleMenu('about-menu')">About
+                <div id="about-menu" class="dropdown-content">
+                    <div class="menu-opt">Lain Page v2.6</div>
+                    <div class="menu-opt">Dev: TomokoSl</div>
+                </div>
+            </div>
+        </div>
+        <div id="taskbar-area"></div>
+    </nav>
+    <!------------------------------------------------------------------------------------->
+    <main id="desktop-area">
+        <!-- Carpeta local -->
+        <div class="desktop-icon" onclick="openWindow('win-home')">
+            <div class="icon-img">📁</div>
+            <div class="icon-label glitch" data-text="HOME">HOME</div>
+        </div>
+
+        <div id="win-home" class="draggable-window"
+            style="top: 15%; left: 10%; width: 450px; height: 350px; display: none;">
+            <div class="title-bar">
+                <div class="controls">
+                    <span class="close-btn"></span>
+                    <span class="minimize-btn"></span>
+                </div>
+                <div class="title glitch" data-text="[ Home Directory ]">[ Home Directory ]</div>
+                <div class="controls"></div>
+            </div>
+            <div class="window-content" id="file-list">
+                <p>Connecting to local storage...</p>
+            </div>
+        </div>
+
+        <div id="win-notepad" class="draggable-window"
+            style="top: 20%; left: 20%; width: 500px; height: 400px; display: none;">
+            <div class="title-bar">
+                <div class="controls">
+                    <span class="close-btn"></span>
+                    <span class="minimize-btn"></span>
+                </div>
+                <div class="title" id="notepad-title">[ Editor ]</div>
+                <div class="controls"></div>
+            </div>
+            <div class="window-content" style="display: flex; flex-direction: column; height: 100%;">
+                <textarea id="notepad-content" spellcheck="false"></textarea>
+                <div style="display: flex; justify-content: flex-end; margin-top: 5px;">
+                    <button id="save-btn" class="taskbar-item">[ SAVE ]</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="win-image" class="draggable-window"
+            style="top: 10%; left: 15%; width: auto; max-width: 60vw; display: none;">
+            <div class="title-bar">
+                <div class="controls">
+                    <span class="close-btn"></span>
+                    <span class="minimize-btn"></span>
+                </div>
+                <div class="title glitch" id="image-title" data-text="[ Image Viewer ]">[ Image Viewer ]</div>
+                <div class="controls"></div>
+            </div>
+            <div class="window-content no-padding" style="background: black; display: flex; justify-content: center;">
+                <img id="image-display" src="" style="max-width: 100%; max-height: 70vh; display: block;">
+            </div>
+        </div>
+        <!-- termina carpeta local -->
+         
+        <div id="win-chat" class="draggable-window" style="top: 12%; left: 7%;">
+            <div class="title-bar">
+                <div class="controls">
+                    <span class="close-btn"></span>
+                    <span class="minimize-btn"></span>
+                </div>
+                <div class="title glitch" data-text="[ Chat ]">[ Chat ]</div>
+                <div class="controls"></div>
+            </div>
+            <div class="window-content chat-content">
+                <pre class="ascii-art">
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⣀⡤⠞⠉⣁⣤⢤⣼⣷⣴⣶⡄⠀⠀⠀⠀⠀⠀⠉⠛⢦⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⠀⠀⢠⡾⣋⡤⢖⣾⣿⣿⡿⣿⡿⣿⡍⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠳⡈⠳⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⠀⡰⠋⢰⣷⢿⣿⣿⣿⣾⡗⡿⣿⣿⣷⣶⣦⣤⣤⡀⠀⠀⠀⠀⠀⠀⢳⠀⠈⢧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⣰⡇⠀⠀⣁⣸⣿⢿⣿⠵⠟⠙⠛⠋⠉⠉⠉⠛⠛⠛⠀⠀⠀⠀⠀⠀⠈⣇⠀⠀⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⢠⣿⠁⣠⢴⣯⡟⠛⣉⡤⠤⠐⠒⠒⠒⠒⠂⠤⠤⢤⣄⣀⡀⠀⠀⠀⠀⠀⢸⠀⠀⠸⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⢸⣿⡆⢹⡼⠁⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠑⠒⠤⣄⠀⠀⡄⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠘⣿⡇⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠽⠓⣃⣀⣀⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⣿⣧⠞⠁⠀⠤⠒⣋⣩⣭⣭⣭⣍⣀⣀⠠⠤⣀⡀⠀⠀⠀⠀⠔⢋⣥⣶⣿⣿⣿⣿⣿⡙⠒⠤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⢹⡏⢠⠄⣠⣴⣿⣿⣿⣿⣿⡇⠙⣿⣿⣿⣷⣶⣭⣝⣂⣀⣤⣴⣿⣿⣿⠻⣿⣿⣿⠋⠁⠀⠀⠘⣷⢄⠀⠀⠀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⢸⣿⢋⣼⣿⣿⣿⣿⣿⣿⡿⡇⠀⣿⣿⣿⣿⣿⣿⠟⠟⠛⢿⣿⣿⣿⣿⡴⣿⣿⣟⣀⡤⠐⠒⠚⠋⠛⠓⢄⡀⠀⠀⠀⠀
+                    ⠀⠀⠀⠀⢸⣿⣾⣿⣿⣿⣿⣿⣿⢿⡗⡿⠃⢸⠃⠈⠀⠈⣿⣷⣶⣾⣿⠏⣿⣿⣿⣼⣿⣿⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⢳⡀⠀⠀⠀
+                    ⠀⠀⠀⠀⢸⣿⢻⡿⢿⣿⣿⣿⣿⣼⣷⣾⡶⠸⠧⠒⠂⠴⠹⠊⠈⠁⠐⠃⣿⣿⣿⣿⣿⣿⢀⣀⣀⡤⠀⠀⠀⠀⠀⠀⠀⢳⠀⠀⠀
+                    ⠀⠀⠀⣠⡾⢥⠤⠓⠚⠛⠿⣿⡝⡛⠋⣙⠀⠀⠀⡄⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⡿⠟⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠘⡄⠀⠀
+                    ⠀⠀⢀⠜⡶⠉⠀⠀⠀⠀⠀⢀⣽⠿⠛⠉⠙⠒⠺⠥⣠⡀⠀⠀⠀⠀⡐⢋⣿⣿⣿⣿⣧⣤⡤⠖⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀
+                    ⠀⠀⡾⠋⡄⠀⠀⠀⠀⠀⣰⣟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠉⠑⠒⠤⢮⣼⡞⣿⣿⣿⣿⣿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣷⠀⠀
+                    ⠀⠀⣧⠞⠀⠀⠀⠀⠀⢀⣿⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⠻⣮⡙⢳⣄⡀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣴⣾⣿⠀⠀
+                    ⠀⠀⣧⠶⠛⠛⠛⠛⠿⣿⣿⣿⣿⣷⣦⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣧⢸⠛⢿⡆⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⠀⠀
+                    ⠀⣸⠁⠀⠀⠀⠀⠀⠀⠚⣿⣿⣿⣿⣿⣿⣟⡛⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣹⠀⠀⠀⠀⠀⠀⣤⣿⣿⣿⣿⣿⣿⣿⠀⠀
+                    ⢠⡇⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠀⠀⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀
+                    ⡏⡀⠀⢀⣀⣀⣀⣠⣤⣤⣤⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀
+                    ⠻⣄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠛⠛⠛⠉⠛⠿⣷⣶⣦⣦⣤⣄⡀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀
+                    ⠀⠙⣿⣿⣿⣿⣿⣿⣿⣿⠿⠟⠛⠋⢩⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⡿⠻⠿⣿⣿⣷⡿⠋⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀
+                    ⠀⠀⠀⠙⠛⢻⠉⠉⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠈⠉⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀
+                    ⠀⠀⠀⠀⠀⣇⣀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄
+                    ⠀⠀⠀⠀⢰⠅⠈⠑⠀⠀⠀⠀⠀⠀⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡼⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧
+                </pre>
+                <div id="chat-history">
+                    <p>COMMUNICATION CONSOLE v1.0.5</p>
+                    <p>Connecting to ... 210.322.330.1</p>
+                    <p style="color:var(--lain-cyan)">Connected!</p>
+                </div>
+                <div class="chat-input-line">
+                    <input type="text" id="chat-input" placeholder="_" autocomplete="off">
+                    <button class="send-btn">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="win-video" class="draggable-window" style="top: 7%; left: 52%;">
+            <div class="title-bar">
+                <div class="controls">
+                    <span class="close-btn"></span>
+                    <span class="minimize-btn"></span>
+                </div>
+                <div class="title glitch" data-text="[ Video Player ]">[ Video Player ]</div>
+                <div class="controls"></div>
+            </div>
+
+            <div class="window-content no-padding" style="position: relative;">
+                <video class="video-player" loop></video>
+                <button id="video-overlay-mute" class="video-overlay-mute">🔇</button>
+            </div>
+        </div>
+
+        <div id="win-terminal" class="draggable-window" style="top: 47%; left: 72%;">
+            <div class="title-bar">
+                <div class="controls">
+                    <span class="close-btn"></span>
+                    <span class="minimize-btn"></span>
+                </div>
+                <div class="title glitch" data-text="[ Terminal ]">[ Terminal ]</div>
+                <div class="controls"></div>
+            </div>
+            <div class="window-content terminal-content" id="term-output">
+                <div class="term-log">
+                    <p>Navi OS v7.0 [Copland Enterprise]</p>
+                    <p>Type 'help' for available commands.</p>
+                </div>
+                <div class="chat-input-line">
+                    <span style="margin-right: 5px;">TomokoSl@wired:~$</span>
+                    <input type="text" id="term-input" autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+        <div id="win-console" class="draggable-window" style="top: 65%; left: 50%;">
+            <div class="title-bar">
+                <div class="controls">
+                    <span class="close-btn"></span>
+                    <span class="minimize-btn"></span>
+                </div>
+                <div class="title glitch" data-text="[ Console ]">[ Console ]</div>
+                <div class="controls"></div>
+            </div>
+            <div class="window-content console-content">
+                <canvas id="audio-visualizer"></canvas>
+                <div class="audio-controls">
+                    <span style="font-style:italic;">Lain OS</span>
+                    <button id="mute-btn" onclick="toggleMute()">🔊</button>
+                </div>
+                <audio id="audio-player" src="musica.mp3" loop></audio>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bottom-bar">
+        <div>Connection: <span style="color:rgba(255, 255, 255, 0.596)">OK</span></div>
+        <div style="text-align:center">User: TomokoSl | Mainnet <span class="blink-text">▮</span></div>
+        <div><span id="clock">00:00:00</span></div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
