@@ -555,7 +555,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //Comandos de Terminal
     const termInput = document.getElementById('term-input');
-    const termWindow = document.getElementById('win-terminal'); // Referencia a la ventana
+    const termWindow = document.getElementById('win-terminal');
     if (termWindow && termInput) {
         termWindow.addEventListener('click', () => {
             termInput.focus();
@@ -612,7 +612,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateUIIdentity();
 
     function updateUIIdentity() {
-        const currentName = localStorage.getItem('wired_user') || userName; // 
+        const currentName = localStorage.getItem('wired_user') || userName;
         const bottomUserEl = document.getElementById('bottom-bar-user');
         if (bottomUserEl) {
             bottomUserEl.innerText = currentName;
