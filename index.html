@@ -55,47 +55,18 @@
                     <div class="menu-opt" onclick="openDefaultVideo()">> Open Video</div>
                     <div class="menu-opt" onclick="openWindow('win-terminal')">> Open Terminal</div>
                     <div class="menu-opt" onclick="openDefaultAudio()">> Open Console</div>
+                    <div class="menu-opt" onclick="openWindow('win-sysmon')">> Wired Signal</div>
                 </div>
             </div>
             <div class="nav-item" onclick="toggleMenu('about-menu')">About
                 <div id="about-menu" class="dropdown-content">
                     <div class="menu-opt">Lain Page v2.6</div>
                     <div class="menu-opt">Dev: TomokoSl</div>
-                    <div id="win-sysmon" class="draggable-window" style="bottom: 50px; right: 20px; display: none;">
-                        <div class="title-bar">
-                            <span class="title">SYS.MONITOR</span>
-                            <div class="controls">
-                                <span class="minimize-btn"></span>
-                                <span class="close-btn"></span>
-                            </div>
-                        </div>
-                        <div class="window-content">
-                            <div class="sys-stat">
-                                <span>CPU LOAD</span>
-                                <div class="stat-bar-container">
-                                    <div id="sys-cpu-bar" class="stat-bar-fill"></div>
-                                </div>
-                            </div>
-                            <div class="sys-stat">
-                                <span>NET TRAFFIC</span>
-                                <div class="stat-bar-container">
-                                    <div id="sys-net-bar" class="stat-bar-fill"></div>
-                                </div>
-                            </div>
-                            <div class="sys-stat">
-                                <span>MEMORY</span>
-                                <div class="stat-bar-container">
-                                    <div id="sys-mem-bar" class="stat-bar-fill" style="width: 60%"></div>
-                                </div>
-                            </div>
-                            <p class="blink-text" style="margin-top:10px; font-size: 0.7rem; text-align: center;">CONNECTED TO WIRED</p>
-                        </div>
                     </div>
-                </div>
             </div>
         </div>
-        <div id="taskbar-area"></div>
-    </nav>
+    <div id="taskbar-area"></div>
+</nav>
     <!------------------------------------------------------------------------------------->
     <main id="desktop-area">
         <!-- Carpeta local -->
@@ -233,7 +204,7 @@
                     <p>Type 'help' for available commands.</p>
                 </div>
                 <div class="chat-input-line">
-                    <span style="margin-right: 5px;">TomokoSl@wired:~$</span>
+                    <span id="term-user-prefix">User@wired:~$</span>
                     <input type="text" id="term-input" autocomplete="off">
                 </div>
             </div>
@@ -257,12 +228,42 @@
                 <audio id="audio-player" src="musica.mp3" loop></audio>
             </div>
         </div>
+
+        <div id="win-sysmon" class="draggable-window" style="bottom: 50px; right: 20px; display: none;">
+            <div class="title-bar">
+                <span class="title">[ WIRED SIGNAL ]</span>
+                <div class="controls">
+                    <span class="minimize-btn"></span>
+                    <span class="close-btn"></span>
+                </div>
+            </div>
+            <div class="window-content" style="display: flex; flex-direction: column; gap: 5px;">
+                
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--lain-cyan);">
+                    <span>NODE: LAYER_07</span>
+                    <span id="signal-text">STABLE</span>
+                </div>
+
+                <div style="border: 1px solid var(--lain-dark); background: black; padding: 2px;">
+                    <canvas id="net-canvas" width="280" height="100" style="display:block;"></canvas>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #003f5c;">
+                    <span>IN: <span id="val-in">0</span> Kbps</span>
+                    <span>OUT: <span id="val-out">0</span> Kbps</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+
     </main>
 
     <footer class="bottom-bar">
         <div>Connection: <span style="color:rgba(255, 255, 255, 0.596)">OK</span></div>
-        <div style="text-align:center">User: TomokoSl | Mainnet <span class="blink-text">▮</span></div>
-        <div><span id="clock">00:00:00</span></div>
+        <div style="text-align:center">User: <span id="bottom-bar-user">Guest</span> | Mainnet <span class="blink-text">▮</span></div>        <div><span id="clock">00:00:00</span></div>
     </footer>
 
     <script src="script.js"></script>

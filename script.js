@@ -46,14 +46,69 @@ document.addEventListener("DOMContentLoaded", () => {
     //Definiciones de funciones
 
     //Widget
-    function updateSysMon() {
-        const cpuBar = document.getElementById('sys-cpu-bar');
-        const netBar = document.getElementById('sys-net-bar');
-        const memBar = document.getElementById('sys-mem-bar');
+    
+    let netData = new Array(50).fill(50); // Array inicial con 50 puntos medios
+    let canvasCtx = null;
 
-        if (cpuBar) cpuBar.style.width = `${Math.floor(Math.random() * 60) + 10}%`;
-        if (netBar) netBar.style.width = `${Math.floor(Math.random() * 80) + 5}%`;
-        if (memBar) memBar.style.width = `${45 + Math.floor(Math.random() * 10)}%`;
+    function initNetGraph() {
+        const canvas = document.getElementById('net-canvas');
+        if (canvas) {
+            canvasCtx = canvas.getContext('2d');
+            requestAnimationFrame(drawNetGraph);
+        }
+    }
+
+    function drawNetGraph() {
+        if (!document.getElementById('win-sysmon')) return;
+        let lastVal = netData[netData.length - 1];
+        let change = (Math.random() * 20) - 10;
+        let newVal = Math.max(10, Math.min(90, lastVal + change));
+        netData.shift();
+        netData.push(newVal);
+
+        const valIn = document.getElementById('val-in');
+        const valOut = document.getElementById('val-out');
+        const sigText = document.getElementById('signal-text');
+        
+        if(valIn) valIn.innerText = Math.floor(newVal * 12);
+        if(valOut) valOut.innerText = Math.floor(newVal * 8);
+        if(sigText) {
+            if(newVal > 80) sigText.innerText = "SURGE";
+            else if(newVal < 20) sigText.innerText = "WEAK";
+            else sigText.innerText = "STABLE";
+        }
+
+        if (canvasCtx) {
+            const width = 280; // Ancho interno definido en HTML
+            const height = 100;
+            
+
+            canvasCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            canvasCtx.fillRect(0, 0, width, height);
+            
+            canvasCtx.strokeStyle = '#003f5c';
+            canvasCtx.lineWidth = 0.5;
+            canvasCtx.beginPath();
+            for(let i=0; i<width; i+=20) { canvasCtx.moveTo(i,0); canvasCtx.lineTo(i,height); }
+            for(let i=0; i<height; i+=20) { canvasCtx.moveTo(0,i); canvasCtx.lineTo(width,i); }
+            canvasCtx.stroke();
+
+            canvasCtx.strokeStyle = 'var(--lain-cyan)';
+            canvasCtx.strokeStyle = '#009fe9'; 
+            canvasCtx.lineWidth = 2;
+            canvasCtx.beginPath();
+            
+            const step = width / (netData.length - 1);
+            
+            for (let i = 0; i < netData.length; i++) {
+                const x = i * step;
+                const y = height - netData[i];
+                if (i === 0) canvasCtx.moveTo(x, y);
+                else canvasCtx.lineTo(x, y);
+            }
+            canvasCtx.stroke();
+        }
+        requestAnimationFrame(drawNetGraph);
     }
 
     //Gestion de ventanas
@@ -326,14 +381,25 @@ document.addEventListener("DOMContentLoaded", () => {
         const now = new Date();
         const clockEl = document.getElementById('clock');
         if (clockEl) {
-            clockEl.innerText = now.toLocaleTimeString();
+            clockEl.innerText = now.toLocaleTimeString('es-ES', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: false 
+            });
         }
     }
 
-    function printToTerminal(text) {
+    function printToTerminal(text, withUser = false) {
         const p = document.createElement('p');
-        p.innerText = text;
+        if (withUser) {
+            const current = localStorage.getItem('wired_user') || userName;
+            p.innerHTML = `<span>${current}@wired:~$</span> ${text}`;
+        } else {
+            p.innerText = text;
+        }
         termLog.appendChild(p);
+        termLog.scrollTop = termLog.scrollHeight; // 
     }
 
     function triggerEasterEgg() {
@@ -403,13 +469,10 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => bootScreen.style.display = 'none', 1000);
         triggerRandomGlitch();
         initAudioSystem();
-        const sysMonWin = document.getElementById('win-sysmon');
-        if(sysMonWin) {
-            sysMonWin.style.display = 'flex';
-            setInterval(updateSysMon, 1000);
-        }
+    
         isSystemStarted = true;
         tryAutoStart();
+        initNetGraph();
     });
 
     //Eventos de ventana
@@ -495,6 +558,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //Comandos de Terminal
     const termInput = document.getElementById('term-input');
+    const termWindow = document.getElementById('win-terminal'); // Referencia a la ventana
+    if (termWindow && termInput) {
+        termWindow.addEventListener('click', () => {
+            termInput.focus();
+        });
+    }
     const termCommands = {
         help: () => printToTerminal("COMMANDS: help, clear, setuser, whoami, lain, date, exit, close the world"),
         clear: () => termLog.innerHTML = "",
@@ -503,43 +572,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 printToTerminal("Usage: setuser [name]");
             } else {
                 localStorage.setItem('wired_user', newName);
-                printToTerminal(`System identity updated: ${newName}`);
-                printToTerminal("Please refresh to apply protocol changes.");
-                //location.reload(); //recarga pero se siente antinatural un reinicio forzado
+                userName = newName;
+                updateUIIdentity();
+                printToTerminal(`System identity updated to: ${newName}`);
             }
         },
-            whoami: () => {
-            const current = localStorage.getItem('wired_user');
-            printToTerminal(`User: ${current} / Protocol: 7 / Layer: Physical`); //
-        },        lain: () => printToTerminal("Let's all love Lain."),
+        whoami: () => {printToTerminal(`User: ${userName} / Protocol: 7 / Layer: Physical`);},
+        lain: () => printToTerminal("Let's all love Lain."),
         date: () => printToTerminal(new Date().toString()),
-        exit: () => document.getElementById('win-terminal').style.display = 'none',
+        exit: () => { 
+            if (termWindow) termWindow.style.display = 'none'; 
+        },
         "close the world": () => triggerEasterEgg()
     };
 
-    if (document.getElementById('win-terminal')) {
-        document.getElementById('win-terminal').addEventListener('click', () => termInput.focus());
-        
+    if (termInput) {
         termInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                // Separamos la entrada por espacios: el primer elemento es el comando, el resto es el argumento
-                const fullInput = this.value.trim().split(" ");
-                const command = fullInput[0].toLowerCase();
-                const argument = fullInput.slice(1).join(" "); 
-
-                printToTerminal(`user@wired:~$ ${this.value}`);
-
-                // Verificamos si el comando existe en tu objeto termCommands
+                const fullInput = this.value.trim();
+                this.value = ""; 
+                e.preventDefault();
+                if (fullInput === "") return;
+                const parts = fullInput.split(" ");
+                const command = parts[0].toLowerCase();
+                const argument = parts.slice(1).join(" "); 
+                printToTerminal(fullInput, true);
                 if (termCommands[command]) {
-                    // Ejecutamos el comando pasando el argumento (ej: setuser Lain)
                     termCommands[command](argument); 
-                } 
-                else if (this.value !== "") {
+                } else {
                     printToTerminal(`Command '${command}' not found.`);
                 }
-                
-                this.value = "";
-                termLog.scrollTop = termLog.scrollHeight;
+                if(termLog) termLog.scrollTop = termLog.scrollHeight;
             }
         });
     }
@@ -548,8 +611,19 @@ document.addEventListener("DOMContentLoaded", () => {
     
     setInterval(updateClock, 1000);
     updateClock();
-
     loadFiles();
+    updateUIIdentity();
+
+    function updateUIIdentity() {
+        const currentName = localStorage.getItem('wired_user') || userName; // 
+        const bottomUserEl = document.getElementById('bottom-bar-user');
+        if (bottomUserEl) {
+            bottomUserEl.innerText = currentName;
+            bottomUserEl.style.color = "inherit"; 
+        }
+        const termPrefixEl = document.getElementById('term-user-prefix');
+        if (termPrefixEl) termPrefixEl.innerText = `${currentName}@wired:~$`;
+    }
 });
 
 //Funciones globales
@@ -573,3 +647,4 @@ function toggleMute() {
     audio.muted = !audio.muted;
     btn.innerText = audio.muted ? '🔇' : '🔊';
 }
+

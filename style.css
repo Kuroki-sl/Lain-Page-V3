@@ -285,11 +285,28 @@ body {
 
 /* Widgets de recursos */
 #win-sysmon {
-    width: 200px;
-    height: auto;
+    width: 300px;
+    height: fit-content;
     border: 1px solid var(--lain-cyan);
     color: var(--lain-cyan);
     font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+}
+
+#net-canvas {
+    width: 100%;
+    height: 100px;
+    background: radial-gradient(circle, #00111a 0%, #000000 100%);
+    display: block;
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+    font-size: 0.8rem;
+    color: var(--lain-cyan);
 }
 
 .sys-stat {
@@ -344,6 +361,7 @@ body {
     cursor: pointer;
     position: relative;
     padding: 0 4px;
+    display: inline-block;
 }
 
 .nav-item:hover {
@@ -360,10 +378,10 @@ body {
     background-color: black;
     color: var(--lain-cyan);
     border: 2px solid var(--lain-cyan);
-    min-width: 180px;
+    min-width: 150px;
     padding: 5px 0;
     box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5);
-    z-index: 10000;
+    z-index: 10001;
 }
 
 .menu-opt {
