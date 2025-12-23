@@ -59,4 +59,4 @@ TECNOLOGÍAS:
 - Frontend: HTML5, CSS3, JavaScript "Vanilla".
 - Tiempo Real: Socket.io.
 - Multimedia: Canvas API, Web Audio API.
-- Backend: Node.js + Express[cite: 4, 10].
+- Backend: Node.js + Express.
