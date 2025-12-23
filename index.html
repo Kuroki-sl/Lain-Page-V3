@@ -7,31 +7,39 @@
     <title>Lain Page</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
     <!------------------------------------------------------------------------------------->
+    <div id="crt-overlay">
+        <div class="crt-line"></div>
+    </div>
+
     <div id="boot-screen">
         <div class="boot-content">
-            <pre class="ascii-logo">
+            <div class="ascii-logo">
    _       _       
   | |     (_)      
   | | __ _ _ _ __  
   | |/ _` | | '_ \ 
   | | (_| | | | | |
   |_|\__,_|_|_| |_|
-            </pre>
+            </div>
             <p>COPLAND OS ENTERPRISE v1.02</p>
             <p>Checking memory... <span style="color:var(--lain-cyan)">OK</span></p>
-            <p>Loading Wired Protocol... <span style="color:var(--lain-cyan)">OK</span></p>
+            <p>INITIALIZING WIRED PROTOCOL... <span style="color:var(--lain-cyan)">OK</span></p>
             <br>
-            <p class="blink-text" style="font-size: 1.2rem;">[ CLICK ANYWHERE TO LOGIN ]</p>
+            <p class="blink-text" style="font-size: 1.2rem;">[ CLICK TO LOGIN ]</p>
         </div>
     </div>
     <!------------------------------------------------------------------------------------->    
     <div class="desktop-background"></div>
     <div class="scanlines"></div>
     <!------------------------------------------------------------------------------------->
+    
+    <audio id="audio-player" loop></audio>
+
     <nav class="top-bar">
         <div class="menu-area">
             <div class="nav-item" onclick="toggleMenu('status-menu')">Status
