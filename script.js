@@ -1,5 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
-    //variables de estado globales
+    let socket;
+    try {
+        socket = io();
+    } catch (e) {
+        console.warn("Modo Offline: Socket.io no encontrado");
+    }
+
+    //Efecto de encendido
+    const crtOverlay = document.getElementById('crt-overlay');
+    if (crtOverlay) {
+        setTimeout(() => {
+            crtOverlay.style.display = 'none';
+        }, 700);
+    }
+
+    //Usuario local
+    let userName = localStorage.getItem('wired_user'); 
+    //Primera vez asignado por defecto
+    if (!userName) {
+        userName = "User_" + Math.floor(Math.random() * 1000);
+        localStorage.setItem('wired_user', userName);
+    }
+
+    // Asignar color único persistente basado en el nombre
+    const userColor = `hsl(${userName.length * 40 % 360}, 70%, 60%)`;
+
+    //Variables de estado globales
     const taskbarArea = document.getElementById('taskbar-area');
     const bootScreen = document.getElementById('boot-screen');
     const audioPlayer = document.getElementById('audio-player');
@@ -18,6 +44,17 @@ document.addEventListener("DOMContentLoaded", () => {
     let audioCtx, analyser, source;
 
     //Definiciones de funciones
+
+    //Widget
+    function updateSysMon() {
+        const cpuBar = document.getElementById('sys-cpu-bar');
+        const netBar = document.getElementById('sys-net-bar');
+        const memBar = document.getElementById('sys-mem-bar');
+
+        if (cpuBar) cpuBar.style.width = `${Math.floor(Math.random() * 60) + 10}%`;
+        if (netBar) netBar.style.width = `${Math.floor(Math.random() * 80) + 5}%`;
+        if (memBar) memBar.style.width = `${45 + Math.floor(Math.random() * 10)}%`;
+    }
 
     //Gestion de ventanas
     function bringToFront(win) {
@@ -366,6 +403,11 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => bootScreen.style.display = 'none', 1000);
         triggerRandomGlitch();
         initAudioSystem();
+        const sysMonWin = document.getElementById('win-sysmon');
+        if(sysMonWin) {
+            sysMonWin.style.display = 'flex';
+            setInterval(updateSysMon, 1000);
+        }
         isSystemStarted = true;
         tryAutoStart();
     });
@@ -415,6 +457,11 @@ document.addEventListener("DOMContentLoaded", () => {
     //Chat
     const chatInput = document.getElementById('chat-input');
     const chatHistory = document.getElementById('chat-history');
+    if(socket) {
+        socket.on('chat message', (msgData) => {
+             addChatMsg(msgData.user, msgData.text, msgData.color);
+        });
+    }
     if (document.querySelector('.send-btn')) {
         document.querySelector('.send-btn').addEventListener('click', sendMessage);
     }
@@ -425,16 +472,23 @@ document.addEventListener("DOMContentLoaded", () => {
     function sendMessage() {
         if (chatInput.value.trim() === "") return;
         const msg = chatInput.value;
-        addChatMsg("[ TomokoSl ]", msg, "green");
+        
+        if(socket) {
+            socket.emit('chat message', {
+                user: `[ ${userName} ]`, 
+                text: msg,
+                color: userColor 
+            });
+        } else {
+            addChatMsg(`[ ${userName} ]`, msg, "gray");
+        }
+        
         chatInput.value = "";
-        setTimeout(() => {
-            addChatMsg("[ Lain ]", "... I am everywhere.", "var(--lain-cyan)");
-        }, 1000);
     }
 
     function addChatMsg(user, text, color) {
         const p = document.createElement('p');
-        p.innerHTML = `<span style="color: ${color};">${user}</span> ${text}`;
+        p.innerHTML = `<span style="color: ${color}; font-weight: bold;">${user}</span> ${text}`;
         chatHistory.appendChild(p);
         chatHistory.scrollTop = chatHistory.scrollHeight;
     }
@@ -442,10 +496,22 @@ document.addEventListener("DOMContentLoaded", () => {
     //Comandos de Terminal
     const termInput = document.getElementById('term-input');
     const termCommands = {
-        help: () => printToTerminal("COMMANDS: help, clear, whoami, lain, date, exit, close the world"),
+        help: () => printToTerminal("COMMANDS: help, clear, setuser, whoami, lain, date, exit, close the world"),
         clear: () => termLog.innerHTML = "",
-        whoami: () => printToTerminal("User: Guest / Protocol: 7 / Layer: Physical"),
-        lain: () => printToTerminal("Let's all love Lain."),
+        setuser: (newName) => {
+            if (!newName) {
+                printToTerminal("Usage: setuser [name]");
+            } else {
+                localStorage.setItem('wired_user', newName);
+                printToTerminal(`System identity updated: ${newName}`);
+                printToTerminal("Please refresh to apply protocol changes.");
+                //location.reload(); //recarga pero se siente antinatural un reinicio forzado
+            }
+        },
+            whoami: () => {
+            const current = localStorage.getItem('wired_user');
+            printToTerminal(`User: ${current} / Protocol: 7 / Layer: Physical`); //
+        },        lain: () => printToTerminal("Let's all love Lain."),
         date: () => printToTerminal(new Date().toString()),
         exit: () => document.getElementById('win-terminal').style.display = 'none',
         "close the world": () => triggerEasterEgg()
@@ -453,12 +519,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (document.getElementById('win-terminal')) {
         document.getElementById('win-terminal').addEventListener('click', () => termInput.focus());
+        
         termInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                const inputVal = this.value.toLowerCase().trim();
+                // Separamos la entrada por espacios: el primer elemento es el comando, el resto es el argumento
+                const fullInput = this.value.trim().split(" ");
+                const command = fullInput[0].toLowerCase();
+                const argument = fullInput.slice(1).join(" "); 
+
                 printToTerminal(`user@wired:~$ ${this.value}`);
-                if (termCommands[inputVal]) termCommands[inputVal]();
-                else if (inputVal !== "") printToTerminal(`Command '${inputVal}' not found.`);
+
+                // Verificamos si el comando existe en tu objeto termCommands
+                if (termCommands[command]) {
+                    // Ejecutamos el comando pasando el argumento (ej: setuser Lain)
+                    termCommands[command](argument); 
+                } 
+                else if (this.value !== "") {
+                    printToTerminal(`Command '${command}' not found.`);
+                }
+                
                 this.value = "";
                 termLog.scrollTop = termLog.scrollHeight;
             }
