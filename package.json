@@ -1,23 +1,30 @@
 {
-  "name": "lain-page",
-  "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
+  "name": "lain-page-v3",
+  "version": "3.0.0",
+  "description": "Interactive web interface simulating Copland OS Enterprise from Serial Experiments Lain.",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kuroki-sl/Lain-Page.git"
+    "url": "git+https://github.com/Kuroki-sl/Lain-Page-V3.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "lain",
+    "cyberpunk",
+    "retro",
+    "copland-os",
+    "wired"
+  ],
+  "author": "TomokoSl",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/Kuroki-sl/Lain-Page/issues"
+    "url": "https://github.com/Kuroki-sl/Lain-Page-V3/issues"
   },
-  "homepage": "https://github.com/Kuroki-sl/Lain-Page#readme",
+  "homepage": "https://github.com/Kuroki-sl/Lain-Page-V3#readme",
   "dependencies": {
     "express": "^5.2.1",
     "http": "^0.0.1-security",

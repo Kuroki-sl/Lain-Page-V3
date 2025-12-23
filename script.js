@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem('wired_user', userName);
     }
 
-    // Asignar color único persistente basado en el nombre
     const userColor = `hsl(${userName.length * 40 % 360}, 70%, 60%)`;
 
     //Variables de estado globales
@@ -44,10 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let audioCtx, analyser, source;
 
     //Definiciones de funciones
-
-    //Widget
     
-    let netData = new Array(50).fill(50); // Array inicial con 50 puntos medios
+    let netData = new Array(50).fill(50);
     let canvasCtx = null;
 
     function initNetGraph() {

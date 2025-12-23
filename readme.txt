@@ -1,5 +1,5 @@
 ========================================================================
-                           PROYECTO: LAIN PAGE V2
+                           PROYECTO: LAIN PAGE V3
 ========================================================================
 
 DESCRIPCIÓN:
@@ -9,7 +9,7 @@ operativo "Copland OS Enterprise", inspirado en la franquicia japonesa
 
 El objetivo es recrear la estética "Cyberpunk/Retro" de finales de los 90, 
 utilizando tecnologías web modernas para simular un entorno de escritorio 
-funcional, dinámico y conectado a un servidor local.
+funcional, dinámico y conectado a un servidor en tiempo real.
 
 CARACTERÍSTICAS PRINCIPALES:
 
@@ -19,55 +19,44 @@ CARACTERÍSTICAS PRINCIPALES:
    - Gestión de capas (Z-index): La ventana activa siempre se trae al frente al hacer clic.
    - Animaciones de apertura ("Pop") y minimizado fluido.
 
-2. Aplicaciones Simuladas:
-   - [ Home ]: Explorador de archivos dinámico. Carga la lista de archivos reales desde el servidor.
-   - [ Chat ]: Simulación de terminal de chat con scroll automático y respuestas programadas.
-   - [ Video ]: Reproductor con botón de Mute flotante e inicio automático silencioso.
-   - [ Console ]: Visualizador de audio (Spectrum Analyzer) usando Canvas API y Web Audio API.
-   - [ Terminal ]: Intérprete de comandos con funcionalidades ocultas (Easter Eggs).
-   - [ Notepad ]: Editor de texto funcional con capacidad de guardar cambios en el servidor (/api/save).
-   - [ Image ]: Visor de imágenes dinámico.
+2. Aplicaciones y Protocolos de "The Wired":
+   - [ Home ]: Explorador de archivos que carga la lista en tiempo real desde el servidor.
+   - [ Wired Chat ]: Chat real mediante Socket.io con asignación de color única por usuario.
+   - [ Video Player ]: Reproductor con botón de Mute flotante e inicio automático.
+   - [ Console ]: Visualizador de audio (Spectrum Analyzer) usando Canvas API.
+   - [ Terminal ]: Intérprete de comandos (help, setuser, whoami, lain, etc.) con prefijo de usuario dinámico.
+   - [ Wired Signal ]: Widget de monitoreo de red que visualiza la señal de la red mediante Canvas.
+   - [ Notepad ]: Editor de texto con capacidad de guardado persistente en el servidor.
 
-3. Barra de Tareas y Menús Inteligentes:
-   - Menú "AI lain Pass": Lógica inteligente que detecta si una ventana está cerrada, 
-     minimizada o abierta para actuar en consecuencia (abrir, restaurar o enfocar).
-   - Reloj en tiempo real: Situado en la barra inferior, sincronizado con la hora local.
-   - Barra de tareas superior: Muestra las aplicaciones activas minimizadas.
+3. Sistema de Identidad:
+   - Persistencia de usuario: El sistema recuerda tu nombre mediante localStorage.
+   - Sincronización global: El nombre de usuario se actualiza en tiempo real en la terminal, el chat y la barra inferior.
 
 4. Estética Visual Avanzada:
-   - Efecto "Scanlines" con animación de desplazamiento vertical (scrolling).
-   - Efecto "Glitch" aleatorio en textos y títulos.
-   - Paleta de colores fiel a la serie (Lain Cyan).
-   - Tipografía retro (VT323).
+   - Simulación de encendido CRT: Efecto de línea blanca al cargar el sistema.
+   - Efecto "Scanlines" y "Glitch" aleatorio en elementos de la interfaz.
+   - Reloj digital en formato de 24 horas.
+   - Tipografía retro (VT323) y paleta de colores "Lain Cyan".
 
 REQUISITOS:
-Para ejecutar este proyecto localmente, necesitas tener instalado:
-- Node.js.
+Para ejecutar este proyecto localmente, necesitas:
+- Node.js instalado.
 
 INSTALACIÓN Y EJECUCIÓN:
-Este proyecto utiliza un backend con Express para servir los archivos dinámicamente 
-y gestionar la persistencia de datos.
-
 1. Abre la terminal en la carpeta del proyecto.
-2. Instala las dependencias necesarias:
+2. Instala las dependencias (Express y Socket.io):
    npm install
-3. Inicia el servidor local:
+3. Inicia el servidor de "The Wired":
    node server.js
-4. Abre tu navegador y visita:
-   http://localhost:3000
+4. Accede vía:
+   http://localhost:3000 
 
 NOTAS DE USO:
-
-* CONTROLES:
-  - Arrastrar: Clic y mantener sobre la barra de título de cualquier ventana.
-  - Minimizar: Botón [_]. La ventana irá a la barra superior.
-  - Restaurar: Clic en el ítem de la barra superior o desde el menú "AI lain Pass".
-  - Mute Video: Botón flotante [🔇] sobre el video.
-
-* COMANDOS DE TERMINAL:
-  Escribe 'help' para ver la lista.
+- Escribe 'setuser [tu_nombre]' en la terminal para cambiar tu identidad en la red.
+- Escribe 'close the world' en la terminal para ejecutar el Protocolo de Capa 07 (Easter Egg).
 
 TECNOLOGÍAS:
 - Frontend: HTML5, CSS3, JavaScript "Vanilla".
+- Tiempo Real: Socket.io.
 - Multimedia: Canvas API, Web Audio API.
-- Backend: Node.js + Express.
+- Backend: Node.js + Express[cite: 4, 10].
